@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\og\Functional;
 
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 use Drupal\og\Og;
 use Drupal\og\OgRoleInterface;
 use Drupal\og\Entity\OgRole;
@@ -55,12 +53,8 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create bundle.
-    $this->groupBundle = mb_strtolower($this->randomMachineName());
-
     // Create a node type.
-    $node_type = $this->createContentType(['type' => $this->groupBundle, 'name' => $this->groupBundle]);
-    $node_type->save();
+    $node_type = $this->createContentType();
     // Define the bundles as groups.
     Og::groupTypeManager()->addGroup('node', $this->groupBundle);
 
@@ -69,11 +63,9 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
 
     // Create groups.
     $this->group = $this->createNode([
-      'type' => $this->groupBundle,
-      'title' => $this->randomString(),
+      'type' => $node_type->bundle(),
       'uid' => $user->id(),
     ]);
-    $this->group->save();
 
     /** @var \Drupal\og\Entity\OgRole $role */
     $role = OgRole::getRole('node', $this->groupBundle, OgRoleInterface::ANONYMOUS);
