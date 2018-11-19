@@ -13,11 +13,18 @@ env:
   matrix:
     - TEST_SUITE=8.5.x
     - TEST_SUITE=8.6.x
+    - TEST_SUITE=8.7.x
     - TEST_SUITE=PHP_CodeSniffer
 
 # Only run the coding standards check once.
 matrix:
   exclude:
+    - php: 5.6
+      env: TEST_SUITE=8.7.x
+    - php: 7.0
+      env: TEST_SUITE=8.7.x
+    - php: 7.1
+      env: TEST_SUITE=8.7.x
     - php: 5.6
       env: TEST_SUITE=PHP_CodeSniffer
     - php: 7.0
@@ -25,7 +32,7 @@ matrix:
     - php: 7.1
       env: TEST_SUITE=PHP_CodeSniffer
   allow_failures:
-    - env: TEST_SUITE=8.6.x
+    - env: TEST_SUITE=8.7.x
 
 mysql:
   database: og
@@ -43,9 +50,6 @@ before_script:
 
   # Remember the current directory for later use in the Drupal installation.
   - MODULE_DIR=$(pwd)
-
-  # Install Composer dependencies for OG.
-  - composer install
 
   # Navigate out of module directory to prevent blown stack by recursive module
   # lookup.
