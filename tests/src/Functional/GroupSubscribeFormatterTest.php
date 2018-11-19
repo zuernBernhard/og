@@ -63,12 +63,12 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
 
     // Create groups.
     $this->group = $this->createNode([
-      'type' => $node_type->bundle(),
+      'type' => $node_type->id(),
       'uid' => $user->id(),
     ]);
 
     /** @var \Drupal\og\Entity\OgRole $role */
-    $role = OgRole::getRole('node', $node_type->bundle(), OgRoleInterface::ANONYMOUS);
+    $role = OgRole::getRole('node', $node_type->id(), OgRoleInterface::ANONYMOUS);
     $role
       ->grantPermission('subscribe without approval')
       ->save();
