@@ -260,16 +260,3 @@ class SubscriptionControllerTest extends UnitTestCase {
   }
 
 }
-
-// @todo Delete after https://www.drupal.org/node/1858196 is in.
-namespace Drupal\og\Controller;
-
-if (!function_exists('drupal_set_message')) {
-
-  /**
-   * Mocking for drupal_set_message().
-   */
-  function drupal_set_message() {
-  }
-
-}
