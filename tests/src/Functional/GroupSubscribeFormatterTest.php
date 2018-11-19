@@ -56,7 +56,7 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
     // Create a node type.
     $node_type = $this->createContentType();
     // Define the bundles as groups.
-    Og::groupTypeManager()->addGroup('node', $this->groupBundle);
+    Og::groupTypeManager()->addGroup('node', $node_type->bundle());
 
     // Create node author user.
     $user = $this->createUser();
@@ -68,7 +68,7 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
     ]);
 
     /** @var \Drupal\og\Entity\OgRole $role */
-    $role = OgRole::getRole('node', $this->groupBundle, OgRoleInterface::ANONYMOUS);
+    $role = OgRole::getRole('node', $node_type->bundle(), OgRoleInterface::ANONYMOUS);
     $role
       ->grantPermission('subscribe without approval')
       ->save();
