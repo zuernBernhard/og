@@ -42,7 +42,7 @@ class SubscriptionController extends ControllerBase {
    *
    * @param \Drupal\og\OgAccessInterface $og_access
    *   The OG access service.
-   * @param \Drupal\Core\Messenger\MessengerInterface
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
   public function __construct(OgAccessInterface $og_access, MessengerInterface $messenger) {
