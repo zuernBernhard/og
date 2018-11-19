@@ -59,8 +59,8 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
     $this->groupBundle = mb_strtolower($this->randomMachineName());
 
     // Create a node type.
-    $this->createContentType(['type' => $this->groupBundle, 'name' => $this->groupBundle]);
-
+    $node_type = $this->createContentType(['type' => $this->groupBundle, 'name' => $this->groupBundle]);
+    $node_type->save();
     // Define the bundles as groups.
     Og::groupTypeManager()->addGroup('node', $this->groupBundle);
 
@@ -73,6 +73,7 @@ class GroupSubscribeFormatterTest extends BrowserTestBase {
       'title' => $this->randomString(),
       'uid' => $user->id(),
     ]);
+    $this->group->save();
 
     /** @var \Drupal\og\Entity\OgRole $role */
     $role = OgRole::getRole('node', $this->groupBundle, OgRoleInterface::ANONYMOUS);
