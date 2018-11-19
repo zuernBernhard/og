@@ -13,6 +13,7 @@ use Drupal\og\OgAccessInterface;
 use Drupal\og\OgMembershipInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\EntityOwnerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 
 /**
  * Tests the subscription controller.
@@ -82,13 +83,14 @@ class SubscriptionControllerTest extends UnitTestCase {
     $this->ogMembership = $this->prophesize(OgMembershipInterface::class);
     $this->url = $this->prophesize(Url::class);
     $this->user = $this->prophesize(AccountInterface::class);
-
+    $this->messenger = $this->prophesize(MessengerInterface::class);
     // Set the container for the string translation service.
     $container = new ContainerBuilder();
     $container->set('current_user', $this->user->reveal());
     $container->set('entity.form_builder', $this->entityFormBuilder->reveal());
     $container->set('og.membership_manager', $this->membershipManager->reveal());
     $container->set('string_translation', $this->getStringTranslationStub());
+    $container->set('messenger'), $this->messenger->reveal();
     \Drupal::setContainer($container);
 
   }
@@ -255,7 +257,7 @@ class SubscriptionControllerTest extends UnitTestCase {
    * Invoke the unsubscribe method.
    */
   protected function unsubscribe() {
-    $controller = new SubscriptionController($this->ogAccess->reveal());
+    $controller = new SubscriptionController($this->ogAccess->reveal(), $this->messenger->reveal());
     $controller->unsubscribe($this->group->reveal());
   }
 
