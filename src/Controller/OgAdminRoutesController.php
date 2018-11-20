@@ -79,7 +79,7 @@ class OgAdminRoutesController extends ControllerBase {
     // prevent us from unit testing this method.
     if (!$this->accessManager->checkNamedRoute($route_name, $parameters)) {
       // User doesn't have access to the route.
-      return AccessResult::forbidden();
+      return ['#markup' => $this->t('You do not have any administrative items.')];
     }
 
     $content[] = [
