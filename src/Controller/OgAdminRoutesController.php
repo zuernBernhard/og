@@ -4,6 +4,7 @@ namespace Drupal\og\Controller;
 
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -63,38 +64,29 @@ class OgAdminRoutesController extends ControllerBase {
    *   List of available admin routes for the current group.
    */
   public function overview(RouteMatchInterface $route_match) {
-    $parameter_name = $route_match->getRouteObject()->getOption('_og_entity_type_id');
+    $entity_type_id = $route_match->getRouteObject()->getOption('_og_entity_type_id');
 
     /** @var \Drupal\Core\Entity\EntityInterface $group */
-    $group = $route_match->getParameter($parameter_name);
-
-    $entity_type_id = $group->getEntityTypeId();
+    $group = $route_match->getParameter($entity_type_id);
 
     // Get list from routes.
     $content = [];
 
-    $event = new OgAdminRoutesEvent();
-    $event = $this->eventDispatcher->dispatch(OgAdminRoutesEventInterface::EVENT_NAME, $event);
+    $route_name = "og_admin.members";
+    $parameters = ['entity_type_id' => $entity_type_id, 'group' => $group->id()];
 
-    foreach ($event->getRoutes($entity_type_id) as $name => $info) {
-      $route_name = "entity.$entity_type_id.og_admin_routes.$name";
-      $parameters = [$entity_type_id => $group->id()];
-
-      // We don't use Url::fromRoute() here for the access check, as it will
-      // prevent us from unit testing this method.
-      if (!$this->accessManager->checkNamedRoute($route_name, $parameters)) {
-        // User doesn't have access to the route.
-        continue;
-      }
-
-      $content[$name]['title'] = $info['title'];
-      $content[$name]['description'] = $info['description'];
-      $content[$name]['url'] = Url::fromRoute($route_name, $parameters);
+    // We don't use Url::fromRoute() here for the access check, as it will
+    // prevent us from unit testing this method.
+    if (!$this->accessManager->checkNamedRoute($route_name, $parameters)) {
+      // User doesn't have access to the route.
+      return AccessResult::forbidden();
     }
 
-    if (!$content) {
-      return ['#markup' => $this->t('You do not have any administrative items.')];
-    }
+    $content[] = [
+      'title' => 'Members',
+      'description' => 'Manage members',
+      'url' => Url::fromRoute($route_name, $parameters),
+    ];
 
     return [
       'og_admin_routes' => [

@@ -137,3 +137,29 @@ og_membership.type_add:
     _title: 'Add membership type'
   requirements:
     _permission: 'administer group'
+
+og_admin.members:
+  path: '/group/{entity_type_id}/{group}/admin/members'
+  defaults:
+    _controller: '\Drupal\og\Controller\OgAdminMembersController::membersList'
+    _title: 'Members'
+  requirements:
+    _permission: 'administer group'
+  options:
+    _admin_route: 'TRUE'
+    parameters:
+      group:
+        type: entity:{entity_type_id}
+
+og_admin.members.add:
+  path: '/group/{entity_type_id}/{group}/admin/members/add'
+  defaults:
+    _controller: '\Drupal\og\Controller\OgAdminMembersController::addPage'
+    _title: 'Add member'
+  requirements:
+    _permission: 'administer group'
+  options:
+    _admin_route: 'TRUE'
+    parameters:
+      group:
+        type: entity:{entity_type_id}

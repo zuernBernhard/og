@@ -1,8 +1,11 @@
-og_membership.add:
-  deriver: \Drupal\og\Plugin\Derivative\OgActionLink
-
 og_membership.type_add:
   route_name: og_membership.type_add
   title: 'Add membership type'
   appears_on:
     - entity.og_membership_type.collection
+
+og_admin.members.add:
+  route_name: og_admin.members.add
+  title: 'Add member'
+  appears_on:
+    - og_admin.members

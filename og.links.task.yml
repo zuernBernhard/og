@@ -1,5 +1,3 @@
-og.og_admin_routes:
-  deriver: \Drupal\og\Plugin\Derivative\OgLocalTask
 entity.og_membership.canonical:
   route_name: entity.og_membership.canonical
   base_route: entity.og_membership.canonical
@@ -13,3 +11,5 @@ entity.og_membership.delete_form:
   base_route: entity.og_membership.canonical
   title: Delete
   weight: 10
+og_admin.local_tasks:
+  deriver: \Drupal\og\Plugin\Derivative\OgLocalTask

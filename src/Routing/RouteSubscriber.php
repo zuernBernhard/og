@@ -74,7 +74,7 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
 
       $entity_type_id = $entity_type->id();
-      $route_name = "entity.$entity_type_id.og_admin_routes";
+      $route_name = "entity.$entity_type_id.og_admin";
       $route = new Route($og_admin_path);
 
       $route
