@@ -70,10 +70,7 @@ class OgAdminMembersController extends ControllerBase {
    *   the function will return the default add member form.
    */
   public function addPage(RouteMatchInterface $route_match) {
-    $entity_type_id = $route_match->getRouteObject()
-      ->getOption('_og_entity_type_id');
-
-    $group = $route_match->getParameter($entity_type_id);
+    $group = $route_match->getParameter('group');
 
     $membership_types = $this->entityTypeManager
       ->getStorage('og_membership_type')

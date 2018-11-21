@@ -18,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class OgAdminRoutesController extends ControllerBase {
 
   /**
-   * The event dispatcher service.
-   *
-   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
-   */
-  protected $eventDispatcher;
-
-  /**
    * The access manager service.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface
@@ -39,8 +32,7 @@ class OgAdminRoutesController extends ControllerBase {
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager service.
    */
-  public function __construct(ContainerAwareEventDispatcher $event_dispatcher, AccessManagerInterface $access_manager) {
-    $this->eventDispatcher = $event_dispatcher;
+  public function __construct(AccessManagerInterface $access_manager) {
     $this->accessManager = $access_manager;
   }
 
@@ -49,7 +41,6 @@ class OgAdminRoutesController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('event_dispatcher'),
       $container->get('access_manager')
     );
   }
@@ -64,16 +55,14 @@ class OgAdminRoutesController extends ControllerBase {
    *   List of available admin routes for the current group.
    */
   public function overview(RouteMatchInterface $route_match) {
-    $entity_type_id = $route_match->getRouteObject()->getOption('_og_entity_type_id');
-
     /** @var \Drupal\Core\Entity\EntityInterface $group */
-    $group = $route_match->getParameter($entity_type_id);
+    $group = $route_match->getParameter('group');
 
     // Get list from routes.
     $content = [];
 
     $route_name = "og_admin.members";
-    $parameters = ['entity_type_id' => $entity_type_id, 'group' => $group->id()];
+    $parameters = ['entity_type_id' => $group->getEntityTypeId(), 'group' => $group->id()];
 
     // We don't use Url::fromRoute() here for the access check, as it will
     // prevent us from unit testing this method.

@@ -52,13 +52,6 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
   protected $routeMatch;
 
   /**
-   * The event dispatcher service.
-   *
-   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher|\Prophecy\Prophecy\ObjectProphecy
-   */
-  protected $eventDispatcher;
-
-  /**
    * The group entity.
    *
    * @var \Drupal\Core\Entity\EntityInterface|\Prophecy\Prophecy\ObjectProphecy
@@ -66,25 +59,11 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
   protected $group;
 
   /**
-   * The OG admin route event.
-   *
-   * @var \Drupal\og\Event\OgAdminRoutesEvent
-   */
-  protected $event;
-
-  /**
    * The entity type ID of the group entity.
    *
    * @var string
    */
   protected $entityTypeId;
-
-  /**
-   * The routes info as returned from the event subscribers.
-   *
-   * @var array
-   */
-  protected $routesInfo;
 
   /**
    * The Url object.
@@ -109,24 +88,10 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
     $this->routeMatch = $this->prophesize(RouteMatchInterface::class);
 
     $this->group = $this->prophesize(EntityInterface::class);
-    $this->event = $this->prophesize(OgAdminRoutesEvent::class);
-    $this->eventDispatcher = $this->prophesize(ContainerAwareEventDispatcher::class);
     $this->route = $this->prophesize(Route::class);
     $this->entityTypeId = $this->randomMachineName();
     $this->entityId = rand(20, 30);
     $this->url = $this->prophesize(Url::class);
-
-    $this->routesInfo = [
-      $this->randomMachineName() => [
-        'title' => $this->randomMachineName(),
-        'description' => $this->randomMachineName(),
-      ],
-
-      $this->randomMachineName() => [
-        'title' => $this->randomMachineName(),
-        'description' => $this->randomMachineName(),
-      ],
-    ];
 
     $this
       ->routeMatch
@@ -142,7 +107,7 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
 
     $this
       ->routeMatch
-      ->getParameter($parameter_name)
+      ->getParameter('group')
       ->willReturn($this->group->reveal());
 
     $this
@@ -154,18 +119,6 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
       ->group
       ->id()
       ->willReturn($this->entityId);
-
-    $this
-      ->eventDispatcher
-      ->dispatch(OgAdminRoutesEventInterface::EVENT_NAME, Argument::type(OgAdminRoutesEvent::class))
-      ->willReturn($this->event->reveal())
-      ->shouldBeCalled();
-
-    $this
-      ->event
-      ->getRoutes($this->entityTypeId)
-      ->willReturn($this->routesInfo)
-      ->shouldBeCalled();
 
     // Set the container for the string translation service.
     $translation = $this->getStringTranslationStub();
@@ -194,8 +147,8 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
     $result = $this->getRenderElementResult(TRUE);
 
     foreach ($result['og_admin_routes']['#content'] as $key => $value) {
-      $this->assertEquals($this->routesInfo[$key]['title'], $value['title']);
-      $this->assertEquals($this->routesInfo[$key]['description'], $value['description']);
+      $this->assertEquals('Members', $value['title']);
+      $this->assertEquals('Manage members', $value['description']);
     }
 
   }
@@ -210,16 +163,16 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
    *   The render array.
    */
   protected function getRenderElementResult($allow_access) {
-    $parameters = [$this->entityTypeId => $this->entityId];
-    foreach (array_keys($this->routesInfo) as $name) {
-      $route_name = "entity.{$this->entityTypeId}.og_admin_routes.$name";
-      $this
-        ->accessManager
-        ->checkNamedRoute($route_name, $parameters)
-        ->willReturn($allow_access);
-    }
+    $parameters = ['entity_type_id' => $this->entityTypeId, 'group' => $this->entityId];
 
-    $og_admin_routes_controller = new OgAdminRoutesController($this->eventDispatcher->reveal(), $this->accessManager->reveal());
+    $route_name = "og_admin.members";
+    $this
+      ->accessManager
+      ->checkNamedRoute($route_name, $parameters)
+      ->willReturn($allow_access);
+
+
+    $og_admin_routes_controller = new OgAdminRoutesController($this->accessManager->reveal());
     return $og_admin_routes_controller->overview($this->routeMatch->reveal());
   }
 
