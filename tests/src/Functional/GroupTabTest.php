@@ -27,11 +27,25 @@ class GroupTabTest extends BrowserTestBase {
   protected $group;
 
   /**
+   * Test entity group.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $nonGroup;
+
+  /**
    * A group bundle name.
    *
    * @var string
    */
   protected $bundle1;
+
+  /**
+   * A group bundle name.
+   *
+   * @var string
+   */
+  protected $bundle2;
 
   /**
    * A non-author user.

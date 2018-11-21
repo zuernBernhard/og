@@ -86,7 +86,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           '_og_user_access_group' => 'administer group',
         ])
         ->setOption('parameters', [
-          $entity_type_id => ['type' => 'entity:' . $entity_type_id],
+          'group' => ['type' => 'entity:' . $entity_type_id],
         ])
         // As the above parameters doesn't send the entity,
         // so we will have to use the Route matcher to extract it.
