@@ -75,7 +75,7 @@ class OgLocalTaskTest extends UnitTestCase {
       ->willReturn($group_map);
 
     foreach (array_keys($group_map) as $entity_type_id) {
-      $route_name = "entity.$entity_type_id.og_admin_routes";
+      $route_name = "entity.$entity_type_id.og_admin";
 
       $this
         ->routeProvider
