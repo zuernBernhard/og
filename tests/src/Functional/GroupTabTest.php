@@ -27,13 +27,6 @@ class GroupTabTest extends BrowserTestBase {
   protected $group;
 
   /**
-   * Test entity group.
-   *
-   * @var \Drupal\node\NodeInterface
-   */
-  protected $nonGroup;
-
-  /**
    * A group bundle name.
    *
    * @var string
@@ -82,24 +75,19 @@ class GroupTabTest extends BrowserTestBase {
     Og::groupTypeManager()->addGroup('node', $this->bundle1);
 
     // Create node author user.
-    $user = $this->createUser();
+    $this->user1 = $this->drupalCreateUser(['administer group']);
+
+    // Create normal user.
+    $this->user2 = $this->drupalCreateUser(['access content']);
 
     // Create nodes.
     $this->group = Node::create([
       'type' => $this->bundle1,
       'title' => $this->randomString(),
-      'uid' => $user->id(),
+      'uid' => $this->user1->id(),
     ]);
     $this->group->save();
 
-    $this->nonGroup = Node::create([
-      'type' => $this->bundle2,
-      'title' => $this->randomString(),
-      'uid' => $user->id(),
-    ]);
-    $this->nonGroup->save();
-
-    $this->user1 = $this->drupalCreateUser(['administer group']);
   }
 
   /**
@@ -109,8 +97,11 @@ class GroupTabTest extends BrowserTestBase {
     $this->drupalLogin($this->user1);
     $this->drupalGet('group/node/' . $this->group->id() . '/admin');
     $this->assertResponse(200);
+    $this->drupalLogout();
+  }
 
-    $this->drupalGet('group/node/' . $this->nonGroup->id() . '/admin');
+  public function testGroupTabAccessDenied() {
+    $this->drupalGet('group/node/' . $this->group->id() . '/admin');
     $this->assertResponse(403);
   }
 

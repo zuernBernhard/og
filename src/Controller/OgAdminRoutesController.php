@@ -57,7 +57,11 @@ class OgAdminRoutesController extends ControllerBase {
   public function overview(RouteMatchInterface $route_match) {
     /** @var \Drupal\Core\Entity\EntityInterface $group */
     $group = $route_match->getParameter('group');
-
+    $entity_type_id = NULL;
+    if (!is_object($group)) {
+      $entity_type_id = $route_match->getRouteObject()->getOption('_og_entity_type_id');
+      $group = $route_match->getParameter($entity_type_id);
+    }
     // Get list from routes.
     $content = [];
 
