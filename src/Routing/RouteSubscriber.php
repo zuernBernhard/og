@@ -7,8 +7,6 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\og\Event\OgAdminRoutesEvent;
-use Drupal\og\Event\OgAdminRoutesEventInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;

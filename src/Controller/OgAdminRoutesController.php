@@ -2,14 +2,10 @@
 
 namespace Drupal\og\Controller;
 
-use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Access\AccessManagerInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\og\Event\OgAdminRoutesEvent;
-use Drupal\og\Event\OgAdminRoutesEventInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,8 +23,6 @@ class OgAdminRoutesController extends ControllerBase {
   /**
    * Constructs an OgAdminController object.
    *
-   * @param \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher
-   *   The event dispatcher service.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager service.
    */

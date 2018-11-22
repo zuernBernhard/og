@@ -2,17 +2,13 @@
 
 namespace Drupal\Tests\og\Unit;
 
-use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\og\Controller\OgAdminRoutesController;
-use Drupal\og\Event\OgAdminRoutesEvent;
-use Drupal\og\Event\OgAdminRoutesEventInterface;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -170,7 +166,6 @@ class OgAdminRoutesControllerTest extends UnitTestCase {
       ->accessManager
       ->checkNamedRoute($route_name, $parameters)
       ->willReturn($allow_access);
-
 
     $og_admin_routes_controller = new OgAdminRoutesController($this->accessManager->reveal());
     return $og_admin_routes_controller->overview($this->routeMatch->reveal());
