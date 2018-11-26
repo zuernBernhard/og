@@ -73,18 +73,18 @@ class GroupCheck implements AccessInterface {
   public function access(AccountInterface $user, Route $route, RouteMatchInterface $route_match, $entity_type_id = NULL, $entity_id = NULL) {
     $group = NULL;
     if (!$entity_type_id) {
-      $parameter_name = $route_match->getRouteObject()->getOption('_og_entity_type_id');
+      $entity_type_id = $route_match->getRouteObject()->getOption('_og_entity_type_id');
 
-      if (!$parameter_name) {
+      if (!$entity_type_id) {
         throw new \BadMethodCallException('Group definition is missing from the router. Did you define $route->setOption(\'_og_entity_type_id\', $entity_type_id) in your route declaration?');
       }
 
       /** @var \Drupal\Core\Entity\EntityInterface $group */
-      if (!$group = $route_match->getParameter($parameter_name)) {
+      $group = $route_match->getParameter($entity_type_id);
+      if (!$group) {
         return AccessResult::forbidden();
       }
 
-      $entity_type_id = $group->getEntityTypeId();
     }
 
     // No access if the entity type doesn't exist.
@@ -93,7 +93,7 @@ class GroupCheck implements AccessInterface {
     }
 
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-    $group = $group ?: $entity_storage->load($entity_id);
+    $group = is_numeric($group) && !is_object($group) && is_null($entity_id) ? $entity_storage->load($group) : $entity_storage->load($entity_id);
 
     // No access if no entity was loaded or it's not a group.
     if (!$group || !Og::isGroup($entity_type_id, $group->bundle())) {
