@@ -251,6 +251,9 @@ class GroupTypeManager implements GroupTypeManagerInterface {
    */
   public function getGroupContentBundleIdsByGroupBundle($group_entity_type_id, $group_bundle_id) {
     $group_relation_map = $this->getGroupRelationMap();
+    if (!is_array($group_relation_map) && property_exists($group_relation_map,'data')) {
+      $group_relation_map = $group_relation_map->data;
+    }
     return isset($group_relation_map[$group_entity_type_id][$group_bundle_id]) ? $group_relation_map[$group_entity_type_id][$group_bundle_id] : [];
   }
 
